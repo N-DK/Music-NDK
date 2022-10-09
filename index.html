@@ -528,7 +528,7 @@
         let currentPage = 1;
         let start= 0;
         let end = perPage;
-        
+        let indexEnd;
 
         const app = {
             isBtnRandom: false,
@@ -578,7 +578,7 @@
                     siger: 'Sơn Tùng MT-P',
                     image: 'https://upload.wikimedia.org/wikipedia/vi/1/1d/N%C6%A1i_n%C3%A0y_c%C3%B3_anh_-_Single_Cover.jpg',
                     btn: 'Play',
-                    path: '/acsset/music/y2mate.com - NƠI NÀY CÓ ANH  OFFICIAL MUSIC VIDEO  SƠN TÙNG MTP.mp3'
+                    path: './acsset/music/y2mate.com - NƠI NÀY CÓ ANH  OFFICIAL MUSIC VIDEO  SƠN TÙNG MTP.mp3'
                 },  
                 {
                     name:"There's no one at all",
@@ -779,6 +779,7 @@
                 const _this = this;
                 const html = this.songs.map((song, index) => {
                     if(index >= start && index < end) {
+                        indexEnd = index;
                         return `
                             <div class="col l-2-4 m-4 c-6"  >
                                 <audio class="audio" src="${song.path}"></audio>
@@ -1038,7 +1039,7 @@
 
             nextSong: function() {
                 this.currentIndex++;
-                if(this.currentIndex >= end ) {
+                if(this.currentIndex > indexEnd ) {
                     this.currentIndex = start;
                 } 
                 this.loadCurrentSong();
@@ -1047,9 +1048,8 @@
             prevSong: function() {
                 this.currentIndex--;
                 if(this.currentIndex < start) {
-                    this.currentIndex = end-1;
+                    this.currentIndex = indexEnd;
                 }
-                console.log(this.currentIndex);
                 this.loadCurrentSong();
             },
 
