@@ -1005,6 +1005,7 @@
                     btnPlay.classList.add('playing');
                     btnPause.classList.add('pause');
                     cdRotate.play();
+                    _this.loadCurrentPlaying();
                 })
 
                 //bấm vào nút pause
@@ -1013,6 +1014,7 @@
                     btnPlay.classList.remove('playing');
                     btnPause.classList.remove('pause');
                     cdRotate.pause();
+                     _this.removeCurrentPlaying();
                 })
 
                 //khi tiến trình thay đổi
@@ -1084,6 +1086,7 @@
                         if(notBan) {
                             audio.play();
                         }
+                        _this.loadCurrentPlaying();
                         btnPlay.classList.add('playing');
                         btnPause.classList.add('pause');
                         cdRotate.play();
@@ -1108,6 +1111,29 @@
                 cdThumb.src = this.currentSong.image;
                 audio.src = this.currentSong.path;
             },
+            loadCurrentPlaying: function() {
+                this.render();
+                let temp = this.currentIndex;
+                if(this.currentIndex > 9) {
+                    temp = this.currentIndex - 10*(currentPage-1);
+                }
+                const wave = document.querySelectorAll('.wave__song');
+                const waveSound = document.querySelectorAll('.wave__sound');
+                console.log(wave);
+                wave[temp].style = "position: absolute; top: 0;left: 0;right: 0;bottom: 0;display: flex;align-items:end; background-color: rgba(0, 0, 0, 0.2);z-index: 2;"
+                waveSound[temp].style = "background: url('./acsset/img/wave__song.gif') no-repeat center; height: 50%;width: 100%;"
+            },
+            removeCurrentPlaying: function() {
+                this.render();
+                let temp = this.currentIndex;
+                if(this.currentIndex > 9) {
+                    temp = this.currentIndex - 10;
+                }
+                const wave = document.querySelectorAll('.wave__song');
+                const waveSound = document.querySelectorAll('.wave__sound');
+                wave[temp].style = "";
+                waveSound[temp].style = "";
+            },
 
             nextSong: function() {
                 this.currentIndex++;
@@ -1115,6 +1141,7 @@
                     this.currentIndex = start;
                 } 
                 this.loadCurrentSong();
+                this.loadCurrentPlaying();
             },
 
             prevSong: function() {
@@ -1123,6 +1150,7 @@
                     this.currentIndex = indexEnd;
                 }
                 this.loadCurrentSong();
+                this.loadCurrentPlaying();
             },
 
             playRandomSong: function() {
