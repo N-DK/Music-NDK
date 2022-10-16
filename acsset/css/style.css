@@ -454,6 +454,7 @@ body {
     margin-top: -8px;
     margin-left: -8px;
     margin-bottom: 18px;
+    position: relative;
 }
 
 .song__img {
