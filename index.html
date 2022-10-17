@@ -1167,8 +1167,25 @@
                 do{
                     newIndex = Math.floor(Math.random() * this.songs.length);
                 }while(newIndex === this.currentIndex);
-
                 this.currentIndex = newIndex;
+                const totalPages = Math.ceil(this.songs.length/perPage) ;//làm tròn lên
+                for(var i = 0; i <= totalPages; i++) {
+                    if(10 * i - this.currentIndex > 0) {
+                        currentPage = i;
+                        break;
+                    }
+                }
+                const eachPages = document.querySelectorAll('.number-page li a');
+                start = (currentPage - 1) * perPage;
+                end = currentPage * perPage;
+                for(var i = 0; i < eachPages.length; i++) {
+                    if(eachPages[i] === eachPages[currentPage-1]) {
+                        eachPages[i].classList.add('active-page');
+                    }
+                    else {
+                        eachPages[i].classList.remove('active-page');
+                    }
+                }
                 this.loadCurrentSong();
                 this.loadCurrentPlaying(); 
             },
