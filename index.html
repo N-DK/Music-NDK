@@ -1186,6 +1186,18 @@
                 end = currentPage * perPage;
                 for(var i = 0; i < eachPages.length; i++) {
                     if(eachPages[i] === eachPages[currentPage-1]) {
+                        if(currentPage > 1) {
+                            btnPrevPage.classList.remove('disble-page');
+                        }
+                        else {
+                            btnPrevPage.classList.add('disble-page');
+                        }
+                        if(currentPage === totalPages) {
+                            btnNextPage.classList.add('disble-page');
+                        }
+                        else {
+                            btnNextPage.classList.remove('disble-page');
+                        }
                         eachPages[i].classList.add('active-page');
                     }
                     else {
