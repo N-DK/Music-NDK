@@ -914,6 +914,9 @@
                     chageStartEnd(currentPage);
                     if(currentPage <= totalPages) {
                         _this.render();
+                        if(_this.currentIndex >= start && _this.currentIndex < end) {
+                            _this.loadCurrentPlaying();
+                        }
                         if(currentPage === totalPages) {
                             btnNextPage.classList.add('disble-page');
                         }
@@ -935,6 +938,9 @@
                     chageStartEnd(currentPage);
                     if(currentPage > 0) {
                         _this.render();
+                        if(_this.currentIndex >= start && _this.currentIndex < end) {
+                            _this.loadCurrentPlaying();
+                        }
                         if(currentPage === 1) {
                             btnPrevPage.classList.add('disble-page');
                         }
