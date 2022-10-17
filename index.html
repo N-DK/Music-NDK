@@ -534,6 +534,7 @@
             isBtnRandom: false,
             isBtnRepeat: false,
             currentIndex: 0,
+            isPlay:false,
             songs: [
                 {
 
@@ -939,7 +940,9 @@
                     if(currentPage > 0) {
                         _this.render();
                         if(_this.currentIndex >= start && _this.currentIndex < end) {
-                            _this.loadCurrentPlaying();
+                            if(_this.isPlay) {
+                                _this.loadCurrentPlaying();
+                            }
                         }
                         if(currentPage === 1) {
                             btnPrevPage.classList.add('disble-page');
@@ -986,7 +989,9 @@
                                     chageStartEnd(currentPage);
                                     _this.render();
                                     if(_this.currentIndex >= start && _this.currentIndex < end) {
-                                        _this.loadCurrentPlaying();
+                                        if(_this.isPlay) {
+                                            _this.loadCurrentPlaying();
+                                        }
                                     }
                                     eachPages[i].classList.add('active-page');
                                 }
@@ -1014,6 +1019,7 @@
 
                 //bấm vào nút play
                 btnPause.addEventListener('click', function() {
+                    _this.isPlay = true;
                     audio.play();
                     btnPlay.classList.add('playing');
                     btnPause.classList.add('pause');
@@ -1093,6 +1099,7 @@
                 product.onclick = function(e) {
                     const songNode = e.target.closest('.song__play');
                     if(songNode) {
+                        _this.isPlay = true;
                         _this.currentIndex = songNode.getAttribute('data-index');
                         if(_this.currentIndex != oldIndex) {
                             _this.loadCurrentSong();
