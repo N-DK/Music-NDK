@@ -1027,6 +1027,12 @@
                     if(_this.currentIndex >= start && _this.currentIndex < end) {
                         _this.loadCurrentPlaying();
                     }
+                    audio.onplay = function() {
+                        oldIndex = _this.currentIndex;
+                    }
+                    audio.onpause = function() {
+                        notBan = true;
+                    }
                 })
 
                 //bấm vào nút pause
