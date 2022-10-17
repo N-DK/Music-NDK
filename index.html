@@ -936,8 +936,8 @@
                 btnPrevPage.addEventListener('click', function() {
                     btnNextPage.classList.remove('disble-page');
                     currentPage--;
-                    chageStartEnd(currentPage);
                     if(currentPage > 0) {
+                        chageStartEnd(currentPage);
                         _this.render();
                         if(_this.currentIndex >= start && _this.currentIndex < end) {
                             if(_this.isPlay) {
