@@ -1342,6 +1342,7 @@
                     if(check == 0) {
                         _this.currentIndex = -1;
                     }
+                    this.render(this.songs, start, end);
                     if(_this.currentIndex >= start && _this.currentIndex < end) {
                         if(_this.isPlay) {
                             _this.loadCurrentPlaying(_this.currentIndex);
