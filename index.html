@@ -1135,7 +1135,6 @@
                             }
                         }
                         if(notBan) {
-                            console.log("chay duoc ne")
                             audio.play();
                         }
                         _this.loadCurrentPlaying(_this.currentIndex);
@@ -1145,7 +1144,6 @@
                     }
                     audio.onplay = function() {
                         oldIndex = _this.songs[_this.currentIndex].name;
-                        console.log(oldIndex);
                     }
                     audio.onpause = function() {
                         notBan = true;
@@ -1167,11 +1165,8 @@
             loadCurrentPlaying: function(index) {
                 this.render(this.songs, start, end);
                 let temp = index;
-                console.log('this.currentIndex: ' + this.currentIndex);
-                console.log('current: ' + currentPage)
                 if(this.currentIndex > perPage - 1) {
                     temp = this.currentIndex - perPage*(currentPage-1);
-                    console.log('temp: ' + temp);
                 }
                 const wave = document.querySelectorAll('.wave__song');
                 const waveSound = document.querySelectorAll('.wave__sound');
@@ -1183,7 +1178,7 @@
                 let temp = this.currentIndex;
                 console.log('this.currentIndex: ' + this.currentIndex);
                 console.log('current: ' + currentPage)
-                if(this.currentIndex > 9) {
+                if(this.currentIndex > perPage - 1) {
                     temp = this.currentIndex - perPage*(currentPage-1);
                     console.log('temp: ' + temp);
                 }
@@ -1325,7 +1320,6 @@
                                 }
                             }
                             if(notBan) {
-                                console.log("chay duoc ne")
                                 audio.play();
                             }
                             _this.loadCurrentPlaying(_this.currentIndex);
@@ -1345,12 +1339,14 @@
                     }
                 }
                 else {
-                    // this.currentIndex = -1;
                     if(check == 0) {
                         _this.currentIndex = -1;
-                        console.log("chay duoc roi");
                     }
-                    this.loadCurrentPlaying(this.currentIndex);
+                    if(_this.currentIndex >= start && _this.currentIndex < end) {
+                        if(_this.isPlay) {
+                            _this.loadCurrentPlaying(_this.currentIndex);
+                        }
+                    }
                     noSearch.classList.add('none');
                     pagination.classList.remove('none');
                     title.classList.remove('none');
