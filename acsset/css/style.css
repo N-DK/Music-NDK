@@ -423,10 +423,16 @@ body {
     padding-top: 48px;
 }
 
+
 .body__container-title {
     margin-bottom: 20px;
     font-size: 24px;
     font-weight: 600;
+}
+
+.No-search {
+    font-size: 42px;
+    font-weight: 900;
 }
 
 .song {
@@ -455,6 +461,8 @@ body {
     margin-left: -8px;
     margin-bottom: 18px;
     position: relative;
+    
+
 }
 
 .song__img {
@@ -532,8 +540,8 @@ body {
     display: flex;
     list-style: none;
     justify-content: center;
-    padding-top: 48px;
-    padding-bottom: 48px;
+    margin-top: 48px;
+    margin-bottom: 32px;
     align-items: center;
 }
 
@@ -544,6 +552,7 @@ body {
 .page {
     margin-bottom: 70px;
     padding-bottom: 32px;
+    height: 180px;
 }
 
 .page__items {
@@ -975,4 +984,16 @@ body {
 
 .btn-page {
     cursor: pointer;
+}
+
+.wave__song {
+   
+}
+
+.wave__sound {
+
+}
+
+.none {
+    display: none !important;
 }
