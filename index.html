@@ -186,7 +186,7 @@
                             <div class="nav_search">
                                 <label class="nav_search-item-first">
                                     <i class="fa-solid fa-magnifying-glass nav_search-icon"></i>
-                                    <input type="text" name="" id="" class="nav_search-input" placeholder="Search Tracks & Artists" >
+                                    <input type="text" name="" id="search_song" class="nav_search-input" placeholder="Search Tracks & Artists" oninput="app.searchSong()">
                                 </label>
                             </div>
                         </div>
@@ -378,13 +378,17 @@
                     <p  class="body__container-title">
                         Recent Releases
                     </p>
+                    <p  class="No-search none">
+                        No results for your search.
+                    </p>
                     <div class="row js-product">
+                        
                     </div>
                 </div>
             </div>
             <div class="page js-page">
                 <div class="gird wide">
-                    <ul class="pagination row">
+                    <ul class="pagination row ">
                         <li class=" page__items btn-page">
                             <a href="#recent" class="page__item-link disble-page js-btn-prev-page ">
                                 <i class="page__item-link-icon fa-solid fa-chevron-left"></i>
@@ -523,12 +527,23 @@
         const btnPrevPage = document.querySelector('.js-btn-prev-page');
         const numberPage = document.querySelector('.number-page');
         const btnDownload = document.querySelector('.modal__song-finally-btn');
-        
+        const pagination = document.querySelector('.pagination');
+        const title = document.querySelector('.body__container-title');
+        const noSearch = document.querySelector('.No-search');
+        const cdRotate = cdThumb.animate([
+            {transform: 'rotate(360deg)'}
+        ], {
+            duration: 10000,
+            iterations: Infinity
+        });
+        cdRotate.pause();
         let perPage = 10;
         let currentPage = 1;
         let start= 0;
         let end = perPage;
         let indexEnd;
+        var check = 0;
+        
 
         const app = {
             isBtnRandom: false,
@@ -822,7 +837,7 @@
                 },
                 {
                     name:'Sài gòn hôm nay mưa',
-                    siger: 'Jsol % Hoàng Duyên',
+                    siger: 'Jsol & Hoàng Duyên',
                     image: 'https://i.scdn.co/image/ab67616d0000b273d1b5e4b7be8a727c73bfcc53',
                     btn: 'Play',
                     path: './acsset/music/y2mate.com - JSOL  HOÀNG DUYÊN  SÀI GÒN HÔM NAY MƯA  Official MV.mp3'
@@ -848,10 +863,10 @@
                 })
             },
             
-            render: function() {
+            render: function(arr, a, b) {
                 const _this = this;
-                const html = this.songs.map((song, index) => {
-                    if(index >= start && index < end) {
+                const html = arr.map((song, index) => {
+                    if(index >= a && index < b) {
                         indexEnd = index;
                         return `
                             <div class="col l-2-4 m-4 c-6"  >
@@ -882,7 +897,7 @@
                                                 Bass House
                                             </p>
                                         </div>
-                                        <a class="song__play js-song-play" data-index="${index}">
+                                        <a class="song__play js-song-play" data-index="${index}" data-name="${song.name}">
                                             <i class="song__play-icon fa-solid fa-circle-play"></i>
                                             <p class="song__play-link">${song.btn}</p>
                                         </a>
@@ -893,7 +908,7 @@
                     }
                 })
                 product.innerHTML = html.join('');
-
+                
             },
             
             pagination: function() {
@@ -914,9 +929,11 @@
                     currentPage++;
                     chageStartEnd(currentPage);
                     if(currentPage <= totalPages) {
-                        _this.render();
+                        _this.render(_this.songs, start, end);
                         if(_this.currentIndex >= start && _this.currentIndex < end) {
-                            _this.loadCurrentPlaying();
+                            if(_this.isPlay) {
+                                _this.loadCurrentPlaying(_this.currentIndex);
+                            }
                         }
                         if(currentPage === totalPages) {
                             btnNextPage.classList.add('disble-page');
@@ -938,10 +955,10 @@
                     currentPage--;
                     if(currentPage > 0) {
                         chageStartEnd(currentPage);
-                        _this.render();
+                        _this.render(_this.songs, start, end);
                         if(_this.currentIndex >= start && _this.currentIndex < end) {
                             if(_this.isPlay) {
-                                _this.loadCurrentPlaying();
+                                _this.loadCurrentPlaying(_this.currentIndex);
                             }
                         }
                         if(currentPage === 1) {
@@ -987,10 +1004,10 @@
                                         btnNextPage.classList.remove('disble-page');
                                     }
                                     chageStartEnd(currentPage);
-                                    _this.render();
+                                    _this.render(_this.songs, start, end);
                                     if(_this.currentIndex >= start && _this.currentIndex < end) {
                                         if(_this.isPlay) {
-                                            _this.loadCurrentPlaying();
+                                            _this.loadCurrentPlaying(_this.currentIndex);
                                         }
                                     }
                                     eachPages[i].classList.add('active-page');
@@ -1009,13 +1026,7 @@
             button: function() {
 
                 const _this = this;
-                const cdRotate = cdThumb.animate([
-                    {transform: 'rotate(360deg)'}
-                ], {
-                    duration: 10000,
-                    iterations: Infinity
-                });
-                cdRotate.pause();
+                
 
                 //bấm vào nút play
                 btnPause.addEventListener('click', function() {
@@ -1024,15 +1035,17 @@
                     btnPlay.classList.add('playing');
                     btnPause.classList.add('pause');
                     cdRotate.play();
+                    console.log('start: ' + start);
+                    console.log('end: ' + end);
                     if(_this.currentIndex >= start && _this.currentIndex < end) {
-                        _this.loadCurrentPlaying();
+                        _this.loadCurrentPlaying(_this.currentIndex);
                     }
                     audio.onplay = function() {
-                        oldIndex = _this.currentIndex;
+                        oldIndex = _this.songs[_this.currentIndex].name;
                     }
                     audio.onpause = function() {
                         notBan = true;
-                    }
+                    } 
                 })
 
                 //bấm vào nút pause
@@ -1040,8 +1053,8 @@
                     audio.pause();
                     btnPlay.classList.remove('playing');
                     btnPause.classList.remove('pause');
-                    cdRotate.pause();
-                     _this.removeCurrentPlaying();
+                    cdRotate.pause(); 
+                    _this.removeCurrentPlaying();  
                 })
 
                 //khi tiến trình thay đổi
@@ -1100,27 +1113,39 @@
                         btnNextSong.click();
                     }
                 }
-                var oldIndex = -1;
+                var oldIndex = 2;
                 var notBan = false;
-                product.onclick = function(e) {
+                
+                product.onclick = function(e) {  
                     const songNode = e.target.closest('.song__play');
                     if(songNode) {
+                        var index = 0;
                         _this.isPlay = true;
-                        _this.currentIndex = songNode.getAttribute('data-index');
-                        if(_this.currentIndex != oldIndex) {
-                            _this.loadCurrentSong();
-                            audio.play();
+                        var dataName = songNode.getAttribute('data-name');
+                        if(dataName != oldIndex) {
+                            while(index <= _this.songs.length) {
+                            var songName = _this.songs[index].name;
+                            if( songName == dataName) {
+                                _this.currentIndex = index;
+                                _this.loadCurrentSong();
+                                audio.play();
+                                break;
+                                }
+                                index++;
+                            }
                         }
                         if(notBan) {
+                            console.log("chay duoc ne")
                             audio.play();
                         }
-                        _this.loadCurrentPlaying();
+                        _this.loadCurrentPlaying(_this.currentIndex);
                         btnPlay.classList.add('playing');
                         btnPause.classList.add('pause');
-                        cdRotate.play();
+                        cdRotate.play();  
                     }
                     audio.onplay = function() {
-                        oldIndex = _this.currentIndex;
+                        oldIndex = _this.songs[_this.currentIndex].name;
+                        console.log(oldIndex);
                     }
                     audio.onpause = function() {
                         notBan = true;
@@ -1139,24 +1164,30 @@
                 cdThumb.src = this.currentSong.image;
                 audio.src = this.currentSong.path;
             },
-            loadCurrentPlaying: function() {
-                this.render();
-                let temp = this.currentIndex;
-                if(this.currentIndex > (perPage-1)) {
+            loadCurrentPlaying: function(index) {
+                this.render(this.songs, start, end);
+                let temp = index;
+                console.log('this.currentIndex: ' + this.currentIndex);
+                console.log('current: ' + currentPage)
+                if(this.currentIndex > perPage - 1) {
                     temp = this.currentIndex - perPage*(currentPage-1);
+                    console.log('temp: ' + temp);
                 }
                 const wave = document.querySelectorAll('.wave__song');
                 const waveSound = document.querySelectorAll('.wave__sound');
-                console.log(wave);
                 wave[temp].style = "position: absolute; top: 0;left: 0;right: 0;bottom: 0;display: flex;align-items:end; background-color: rgba(0, 0, 0, 0.2);z-index: 2;"
-                waveSound[temp].style = "background: url('./acsset/img/wave__song.gif') no-repeat center; height: 115px;width: 100%;"
+                waveSound[temp].style = "background: url('./acsset/img/wave__song.gif') no-repeat center; height: 50%;width: 100%;"
             },
             removeCurrentPlaying: function() {
-                this.render();
+                this.render(this.songs, start, end);
                 let temp = this.currentIndex;
-                if(this.currentIndex > (perPage-1)) {
+                console.log('this.currentIndex: ' + this.currentIndex);
+                console.log('current: ' + currentPage)
+                if(this.currentIndex > 9) {
                     temp = this.currentIndex - perPage*(currentPage-1);
+                    console.log('temp: ' + temp);
                 }
+                console.log('temp: ' + temp);
                 const wave = document.querySelectorAll('.wave__song');
                 const waveSound = document.querySelectorAll('.wave__sound');
                 wave[temp].style = "";
@@ -1169,7 +1200,7 @@
                     this.currentIndex = start;
                 } 
                 this.loadCurrentSong();
-                this.loadCurrentPlaying();
+                this.loadCurrentPlaying(this.currentIndex);
             },
 
             prevSong: function() {
@@ -1178,7 +1209,7 @@
                     this.currentIndex = indexEnd;
                 }
                 this.loadCurrentSong();
-                this.loadCurrentPlaying();
+                this.loadCurrentPlaying(this.currentIndex);
             },
 
             playRandomSong: function() {
@@ -1218,12 +1249,118 @@
                     }
                 }
                 this.loadCurrentSong();
-                this.loadCurrentPlaying(); 
+                this.loadCurrentPlaying(this.currentIndex);
+            },
+
+            searchSong: function() {
+                const _this = this;
+                var oldIndex = 2;
+                var notBan = false;
+                let valueSearchSong = document.getElementById("search_song").value;
+                if(valueSearchSong) {
+                    let songSearch = this.songs.filter(value => {
+                        return value.name.toLowerCase().includes(valueSearchSong.toLowerCase());
+                    })
+                    pagination.classList.add('none');
+                    console.log(songSearch);
+                    if(songSearch.length == 0) {
+                        title.classList.add('none');
+                        console.log("Không tìm thấy bài hát!");
+                        noSearch.classList.remove('none');
+                    }
+                    else if(songSearch.length  > 0) {
+                        noSearch.classList.add('none');
+                        title.classList.remove('none');
+                    }
+
+                    this.render(songSearch, 0, songSearch.length);
+                    product.onclick = function(e) { 
+                        check = 1; 
+                        const songNode = e.target.closest('.song__play');
+                        if(songNode) {
+                            var index = 0;
+                            _this.isPlay = true;
+                            var dataName = songNode.getAttribute('data-name');
+                            if(dataName != oldIndex) {
+                                while(index <= _this.songs.length) {
+                                var songName = _this.songs[index].name;
+                                if( songName == dataName) {
+                                    _this.currentIndex = index;
+                                    _this.loadCurrentSong();
+                                    audio.play();
+                                    break;
+                                    }
+                                    index++;
+                                }
+                                check = index;
+                                const totalPages = Math.ceil(_this.songs.length/perPage) ;//làm tròn lên
+                                for(var i = 0; i <= totalPages; i++) {
+                                    if(10 * i - index > 0) {
+                                        currentPage = i;
+                                        break;
+                                    }
+                                }
+                                const eachPages = document.querySelectorAll('.number-page li a');
+                                start = (currentPage - 1) * perPage;
+                                end = currentPage * perPage;
+                                for(var i = 0; i < eachPages.length; i++) {
+                                    if(eachPages[i] === eachPages[currentPage-1]) {
+                                        if(currentPage > 1) {
+                                            btnPrevPage.classList.remove('disble-page');
+                                        }
+                                        else {
+                                            btnPrevPage.classList.add('disble-page');
+                                        }
+                                        if(currentPage === totalPages) {
+                                            btnNextPage.classList.add('disble-page');
+                                        }
+                                        else {
+                                            btnNextPage.classList.remove('disble-page');
+                                        }
+                                        eachPages[i].classList.add('active-page');
+                                    }
+                                    else {
+                                        eachPages[i].classList.remove('active-page');
+                                    }
+                                }
+                            }
+                            if(notBan) {
+                                console.log("chay duoc ne")
+                                audio.play();
+                            }
+                            _this.loadCurrentPlaying(_this.currentIndex);
+                            btnPlay.classList.add('playing');
+                            btnPause.classList.add('pause');
+                            cdRotate.play();       
+                        }
+                        audio.onplay = function() {
+                            oldIndex = _this.songs[_this.currentIndex].name;
+                            console.log(oldIndex);
+                            
+                        }
+                        audio.onpause = function() {
+                            notBan = true;
+                        }
+                        pagination.classList.remove('none');
+                    }
+                }
+                else {
+                    // this.currentIndex = -1;
+                    if(check == 0) {
+                        _this.currentIndex = -1;
+                        console.log("chay duoc roi");
+                    }
+                    this.loadCurrentPlaying(this.currentIndex);
+                    noSearch.classList.add('none');
+                    pagination.classList.remove('none');
+                    title.classList.remove('none');
+                }    
+                
             },
 
             start: function() {
 
-                this.render();
+                this.render(this.songs, start, end);
 
                 this.defineProperties();
 
