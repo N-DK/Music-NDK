@@ -1175,7 +1175,7 @@
                 const wave = document.querySelectorAll('.wave__song');
                 const waveSound = document.querySelectorAll('.wave__sound');
                 wave[temp].style = "position: absolute; top: 0;left: 0;right: 0;bottom: 0;display: flex;align-items:end; background-color: rgba(0, 0, 0, 0.2);z-index: 2;"
-                waveSound[temp].style = "background: url('./acsset/img/wave__song.gif') no-repeat center; height: 115px;width: 100%;"
+                waveSound[temp].style = "background: url('./acsset/img/wave__song.gif') no-repeat center; height: 115px;width: 100%; position: absolute; bottom: 0;"
             },
             removeCurrentPlaying: function() {
                 this.render(this.songs, start, end);
